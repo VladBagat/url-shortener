@@ -1,5 +1,4 @@
 locals {
-  short_code_key         = "short_link"
   shorten_function_name  = "shorten-${var.environment}"
   redirect_function_name = "redirect-${var.environment}"
   shorten_role_name      = "shorten_lambda_dynamo_${var.environment}"
@@ -19,7 +18,7 @@ resource "aws_lambda_function" "shorten" {
   environment {
     variables = {
       TABLE_NAME     = var.dynamodb_table_name
-      SHORT_CODE_KEY = local.short_code_key
+      SHORT_CODE_KEY = var.dynamodb_short_code_key
     }
   }
 }
@@ -35,7 +34,7 @@ resource "aws_lambda_function" "redirect" {
   environment {
     variables = {
       TABLE_NAME          = var.dynamodb_table_name
-      SHORT_CODE_KEY      = local.short_code_key
+      SHORT_CODE_KEY      = var.dynamodb_short_code_key
       PATH_PARAMETER_NAME = var.redirect_path_parameter_name
     }
   }

@@ -6,6 +6,10 @@ variable "dynamodb_table_arn" {
   type = string
 }
 
+variable "dynamodb_short_code_key" {
+  type = string
+}
+
 variable "environment" {
   type = string
 }
