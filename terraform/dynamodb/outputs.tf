@@ -5,3 +5,7 @@ output "table_name" {
 output "table_arn" {
   value = aws_dynamodb_table.links.arn
 }
+
+output "short_code_key" {
+  value = local.short_code_key
+}
