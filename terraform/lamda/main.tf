@@ -105,11 +105,10 @@ resource "aws_iam_policy" "shorten_lambda_policy" {
       {
         Effect = "Allow"
         Action = [
-          "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "*"
+        Resource = "${aws_cloudwatch_log_group.shorten.arn}:*"
       }
     ]
   })
@@ -133,11 +132,10 @@ resource "aws_iam_policy" "redirect_lambda_policy" {
       {
         Effect = "Allow"
         Action = [
-          "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "*"
+        Resource = "${aws_cloudwatch_log_group.redirect.arn}:*"
       }
     ]
   })
