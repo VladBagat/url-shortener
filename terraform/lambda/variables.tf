@@ -14,11 +14,11 @@ variable "environment" {
   type = string
 }
 
-variable "shorten_lambda_filename" {
+variable "shorten_lambda_source_file" {
   type = string
 }
 
-variable "redirect_lambda_filename" {
+variable "redirect_lambda_source_file" {
   type = string
 }
 

@@ -7,8 +7,21 @@ locals {
   redirect_policy_name   = "redirect-lambda-dynamodb-policy-${var.environment}"
 }
 
+data "archive_file" "shorten" {
+  type        = "zip"
+  source_file = var.shorten_lambda_source_file
+  output_path = "${path.module}/build/shorten.zip"
+}
+
+data "archive_file" "redirect" {
+  type        = "zip"
+  source_file = var.redirect_lambda_source_file
+  output_path = "${path.module}/build/redirect.zip"
+}
+
 resource "aws_lambda_function" "shorten" {
-  filename                       = var.shorten_lambda_filename
+  filename                       = data.archive_file.shorten.output_path
+  source_code_hash               = data.archive_file.shorten.output_base64sha256
   function_name                  = local.shorten_function_name
   role                           = aws_iam_role.shorten_lambda_role.arn
   handler                        = "index.handler"
@@ -24,7 +37,8 @@ resource "aws_lambda_function" "shorten" {
 }
 
 resource "aws_lambda_function" "redirect" {
-  filename                       = var.redirect_lambda_filename
+  filename                       = data.archive_file.redirect.output_path
+  source_code_hash               = data.archive_file.redirect.output_base64sha256
   function_name                  = local.redirect_function_name
   role                           = aws_iam_role.redirect_lambda_role.arn
   handler                        = "index.handler"
