@@ -24,12 +24,12 @@ variable "redirect_lambda_source_file" {
 
 variable "shorten_reserved_concurrent_executions" {
   type    = number
-  default = 2
+  default = -1
 }
 
 variable "redirect_reserved_concurrent_executions" {
   type    = number
-  default = 2
+  default = -1
 }
 
 variable "redirect_path_parameter_name" {
