@@ -5,6 +5,13 @@ locals {
 resource "aws_apigatewayv2_api" "gateway" {
   name          = local.gateway_name
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_methods = ["POST", "GET", "OPTIONS"]
+    allow_headers = ["content-type"]
+    max_age       = 300
+  }
 }
 
 resource "aws_apigatewayv2_integration" "shorten" {

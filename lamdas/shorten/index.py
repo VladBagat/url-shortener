@@ -14,7 +14,6 @@ table = dynamodb.Table(TABLE_NAME)
 
 def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     headers = {
-        "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json"
     }
 
