@@ -3,7 +3,7 @@ resource "aws_lambda_function" "shorten" {
   function_name = "shorten"
   role          = aws_iam_role.shorten_lambda_role.arn
   handler       = "index.handler"
-  runtime       = "python3.12"
+  runtime       = "python3.14"
 }
 
 resource "aws_lambda_function" "redirect" {
@@ -11,7 +11,7 @@ resource "aws_lambda_function" "redirect" {
   function_name = "redirect"
   role          = aws_iam_role.redirect_lambda_role.arn
   handler       = "index.handler"
-  runtime       = "python3.12"
+  runtime       = "python3.14"
 }
 
 resource "aws_iam_role" "shorten_lambda_role" {
