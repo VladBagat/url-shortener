@@ -1,5 +1,5 @@
 locals {
   account_name   = "prod"
-  environment    = "production"
+  environment    = "prod"
   aws_account_id = "375259954999"
 }
