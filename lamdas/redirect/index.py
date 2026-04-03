@@ -1,13 +1,17 @@
 import boto3
 import json
+import os
 from typing import Any, Dict
 
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('urls')
+TABLE_NAME = os.environ["TABLE_NAME"]
+SHORT_CODE_KEY = os.environ["SHORT_CODE_KEY"]
+PATH_PARAMETER_NAME = os.environ.get("PATH_PARAMETER_NAME", "short_code")
+table = dynamodb.Table(TABLE_NAME)
 
 def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:  
     path_parameters = event.get("pathParameters") or {}
-    short_id = path_parameters.get("short_id")
+    short_id = path_parameters.get(PATH_PARAMETER_NAME)
     
     if not short_id:
         return {
@@ -16,7 +20,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         }
 
     response = table.get_item(
-        Key={"short_url": short_id},
+        Key={SHORT_CODE_KEY: short_id},
         ProjectionExpression="long_url"
     )
 
