@@ -4,6 +4,7 @@ import os
 import string
 import random
 import time
+from botocore.exceptions import ClientError
 from typing import Any, Dict
 
 dynamodb = boto3.resource('dynamodb')
@@ -35,17 +36,34 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             "body": json.dumps({"error": "Invalid request body. Expected {'url': '...'}"})
         }
 
-    short_url = get_short_url()
-    
     ttl = int(time.time()) + get_days_in_seconds(1)
+    short_url = None
+    max_retries = 5
 
-    table.put_item(
-        Item={
-        SHORT_CODE_KEY: short_url,
-        "long_url": long_url,
-        "expires_at": ttl,
+    for _ in range(max_retries):
+        candidate_short_url = get_short_url()
+
+        try:
+            table.put_item(
+                Item={
+                    SHORT_CODE_KEY: candidate_short_url,
+                    "long_url": long_url,
+                    "expires_at": ttl,
+                },
+                ConditionExpression=f"attribute_not_exists({SHORT_CODE_KEY})",
+            )
+            short_url = candidate_short_url
+            break
+        except ClientError as exc:
+            if exc.response["Error"]["Code"] != "ConditionalCheckFailedException":
+                raise
+
+    if short_url is None:
+        return {
+            "statusCode": 500,
+            "headers": headers,
+            "body": json.dumps({"error": "Could not generate a unique short URL"})
         }
-    )
 
     return {
         "statusCode": 200,
