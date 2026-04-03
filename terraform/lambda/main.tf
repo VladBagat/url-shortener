@@ -24,7 +24,7 @@ resource "aws_lambda_function" "shorten" {
   source_code_hash               = data.archive_file.shorten.output_base64sha256
   function_name                  = local.shorten_function_name
   role                           = aws_iam_role.shorten_lambda_role.arn
-  handler                        = "index.handler"
+  handler                        = "index.lambda_handler"
   runtime                        = "python3.14"
   reserved_concurrent_executions = var.shorten_reserved_concurrent_executions
 
@@ -41,7 +41,7 @@ resource "aws_lambda_function" "redirect" {
   source_code_hash               = data.archive_file.redirect.output_base64sha256
   function_name                  = local.redirect_function_name
   role                           = aws_iam_role.redirect_lambda_role.arn
-  handler                        = "index.handler"
+  handler                        = "index.lambda_handler"
   runtime                        = "python3.14"
   reserved_concurrent_executions = var.redirect_reserved_concurrent_executions
 
