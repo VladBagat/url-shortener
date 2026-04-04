@@ -27,3 +27,11 @@ variable "redirect_invoke_arn" {
 variable "redirect_function_name" {
   type = string
 }
+
+variable "gateway_domain_name" {
+  type = string
+}
+
+variable "acm_certificate_arn" {
+  type = string
+}

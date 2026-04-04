@@ -68,3 +68,19 @@ resource "aws_lambda_permission" "allow_redirect" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.gateway.execution_arn}/*/*"
 }
+
+resource "aws_apigatewayv2_domain_name" "custom_domain" {
+  domain_name = var.gateway_domain_name
+
+  domain_name_configuration {
+    certificate_arn = var.acm_certificate_arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+}
+
+resource "aws_apigatewayv2_api_mapping" "custom_domain_mapping" {
+  api_id      = aws_apigatewayv2_api.gateway.id
+  domain_name = aws_apigatewayv2_domain_name.custom_domain.id
+  stage       = aws_apigatewayv2_stage.default.id
+}
