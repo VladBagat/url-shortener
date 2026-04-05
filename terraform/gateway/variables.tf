@@ -1,7 +1,3 @@
-variable "environment" {
-  type = string
-}
-
 variable "stage_throttling_rate_limit" {
   type    = number
   default = 1
@@ -25,6 +21,10 @@ variable "redirect_invoke_arn" {
 }
 
 variable "redirect_function_name" {
+  type = string
+}
+
+variable "gateway_name" {
   type = string
 }
 

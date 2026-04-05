@@ -1,12 +1,3 @@
-locals {
-  shorten_function_name  = "shorten-${var.environment}"
-  redirect_function_name = "redirect-${var.environment}"
-  shorten_role_name      = "shorten_lambda_dynamo_${var.environment}"
-  redirect_role_name     = "redirect_lambda_dynamo_${var.environment}"
-  shorten_policy_name    = "shorten-lambda-dynamodb-policy-${var.environment}"
-  redirect_policy_name   = "redirect-lambda-dynamodb-policy-${var.environment}"
-}
-
 data "archive_file" "shorten" {
   type        = "zip"
   source_file = var.shorten_lambda_source_file
@@ -22,7 +13,7 @@ data "archive_file" "redirect" {
 resource "aws_lambda_function" "shorten" {
   filename                       = data.archive_file.shorten.output_path
   source_code_hash               = data.archive_file.shorten.output_base64sha256
-  function_name                  = local.shorten_function_name
+  function_name                  = var.shorten_function_name
   role                           = aws_iam_role.shorten_lambda_role.arn
   handler                        = "index.lambda_handler"
   runtime                        = "python3.14"
@@ -39,7 +30,7 @@ resource "aws_lambda_function" "shorten" {
 resource "aws_lambda_function" "redirect" {
   filename                       = data.archive_file.redirect.output_path
   source_code_hash               = data.archive_file.redirect.output_base64sha256
-  function_name                  = local.redirect_function_name
+  function_name                  = var.redirect_function_name
   role                           = aws_iam_role.redirect_lambda_role.arn
   handler                        = "index.lambda_handler"
   runtime                        = "python3.14"
@@ -65,7 +56,7 @@ resource "aws_cloudwatch_log_group" "redirect" {
 }
 
 resource "aws_iam_role" "shorten_lambda_role" {
-  name = local.shorten_role_name
+  name = var.shorten_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -82,7 +73,7 @@ resource "aws_iam_role" "shorten_lambda_role" {
 }
 
 resource "aws_iam_role" "redirect_lambda_role" {
-  name = local.redirect_role_name
+  name = var.redirect_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -99,7 +90,7 @@ resource "aws_iam_role" "redirect_lambda_role" {
 }
 
 resource "aws_iam_policy" "shorten_lambda_policy" {
-  name        = local.shorten_policy_name
+  name        = var.shorten_policy_name
   path        = "/"
   description = "IAM policy for shorten Lambda access to DynamoDB and CloudWatch Logs"
 
@@ -129,7 +120,7 @@ resource "aws_iam_policy" "shorten_lambda_policy" {
 }
 
 resource "aws_iam_policy" "redirect_lambda_policy" {
-  name        = local.redirect_policy_name
+  name        = var.redirect_policy_name
   path        = "/"
   description = "IAM policy for redirect Lambda access to DynamoDB and CloudWatch Logs"
 

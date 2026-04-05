@@ -1,9 +1,5 @@
-locals {
-  gateway_name = "url-shortener-${var.environment}"
-}
-
 resource "aws_apigatewayv2_api" "gateway" {
-  name          = local.gateway_name
+  name          = var.gateway_name
   protocol_type = "HTTP"
 
   cors_configuration {

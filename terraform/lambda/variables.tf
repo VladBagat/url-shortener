@@ -10,7 +10,27 @@ variable "dynamodb_short_code_key" {
   type = string
 }
 
-variable "environment" {
+variable "shorten_function_name" {
+  type = string
+}
+
+variable "redirect_function_name" {
+  type = string
+}
+
+variable "shorten_role_name" {
+  type = string
+}
+
+variable "redirect_role_name" {
+  type = string
+}
+
+variable "shorten_policy_name" {
+  type = string
+}
+
+variable "redirect_policy_name" {
   type = string
 }
 
