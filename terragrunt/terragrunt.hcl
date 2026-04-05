@@ -7,6 +7,13 @@ locals {
   account_name = local.account_vars.locals.account_name
   account_id   = local.account_vars.locals.aws_account_id
   environment  = local.account_vars.locals.environment
+  current_account_id = get_aws_account_id()
+  account_id_mismatch = local.current_account_id != local.account_id
+}
+
+exclude {
+  if      = local.account_id_mismatch
+  actions = ["all_except_output"]
 }
 
 remote_state {
@@ -33,6 +40,23 @@ generate "provider" {
   contents  = <<EOF
   provider "aws" {
   region = "${local.aws_region}"
+
+  default_tags {
+    tags = {
+      Environment = "${local.environment}"
+      Terraform   = "true"
+    }
+  }
+}
+
+provider "aws" {
+  alias  = "terraform_prod"
+  region = "${local.aws_region}"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::346299179056:role/terraform"
+    session_name = "${local.project_name}-${local.environment}"
+  }
 
   default_tags {
     tags = {
